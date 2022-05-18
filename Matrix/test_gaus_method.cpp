@@ -30,6 +30,7 @@ void test_gaus_method() {
 	std::string str_file((std::istreambuf_iterator<char>(file_to_read)),
 					std::istreambuf_iterator<char>());
 	std::vector<std::string> num_string_vec = str_seq_to_int_vec(str_file);
+	str_file.clear();
 	std::vector<std::vector<T>> vec_2d_int;
 	std::for_each (num_string_vec.begin(), num_string_vec.end(), 
 					[&vec_2d_int](std::string str_to_pass) 
