@@ -20,10 +20,11 @@ public:
 	void swapRows(int&, int&);
 	Matrix(const Matrix&);
 	Matrix& operator=(const Matrix&);
+	Matrix& operator+=(const Matrix&);
 	
 	Matrix transpose();
 private:
-	std::vector<T> operator+(std::vector<T>&,  std::vector<T>&);
+	std::vector<T> operator+(std::vector<T>&);
 
 }; // class Matrix
 
