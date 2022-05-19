@@ -29,6 +29,7 @@ clean:
 	@-rm *.gcov
 	@-rm *.gcda
 	@-rm *.gcno
+	@-rm *.dep
 
 .PHONY: test
 test: $(EXECUTABLE)
