@@ -1,3 +1,6 @@
+#ifndef READ_FROM_FILE
+#define READ_FROM_FILE
+
 #include <algorithm>
 #include <sstream>
 #include <fstream>
@@ -25,7 +28,7 @@ std::vector<std::string> str_seq_to_int_vec(std::string& arg_str) {
 }
 
 template <typename T>
-void test_gaus_method() {
+void MatrixRead() {
 	std::ifstream file_to_read("file.txt");
 	std::string str_file((std::istreambuf_iterator<char>(file_to_read)),
 					std::istreambuf_iterator<char>());
@@ -44,10 +47,4 @@ void test_gaus_method() {
 	);
 }
 
-int main()
-{
-	//test_gaus_method<int>();
-	test_gaus_method<float>();
-	
-	return 0;
-}
+#endif // READ_FROM_FILE

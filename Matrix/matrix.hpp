@@ -1,36 +1,42 @@
 #ifndef __MATRIX_DEFINITION_HPP__
 #define __MATRIX_DEFINITION_HPP__
 
+#include "declaration.hpp"
 
 using  namespace math;
 
-Matrix::Matrix()
+template <typename T>
+Matrix<T>::Matrix()
 	: rows_(1)
 	, cols_(1)
 {
 	std::vector<std::vector<T>> vec(rows_, std::vector<T>(cols_, T(NULL)));
 }
 
-Matrix::Matrix(int& arg_rows, int& arg_cols)
+template <typename T>
+Matrix<T>::Matrix(int& arg_rows, int& arg_cols)
 	: rows_(arg_rows)
 	, cols_(arg_cols)
 {
 	std::vector<std::vector<T>> vec(rows_, std::vector<T>(cols_, T(NULL)));
 }
 
-Matrix::Matrix(int& arg_rows, int& arg_cols, T& arg_val)
+template <typename T>
+Matrix<T>::Matrix(int& arg_rows, int& arg_cols, T& arg_val)
 	: rows_(arg_rows)
 	, cols_(arg_cols)
 {
 	std::vector<std::vector<T>> vec(rows_, std::vector<T>(cols_, arg_val));
 }
 
-Matrix::Matrix(std::vector<std::vector<T>>& arg_vec) 
+template <typename T>
+Matrix<T>::Matrix(std::vector<std::vector<T>>& arg_vec) 
 	: raw_matrix_(arg_vec)
 {
 
 }
 
+//<<<<<<< HEAD
 Matrix::Matrix(const Matrix& m) 
 	: rows_(m.rows_)
 	, cols_(m.cols_)
@@ -61,10 +67,24 @@ Matrix Matrix::transpone()
 	}
 	return ret;
 }
+//=======
+//template <typename T>
+//Matrix<T> Matrix<T>::transpose()
+//{
+//	Matrix<T> ret(cols_, rows_);
+//	for (int i = 0; i < rows_; ++i) {
+//		for (int j = 0; j < cols_; ++j) {
+//			ret.p[j][i] = p[i][j];
+//		}
+//	}
+//	return ret;
+//}
+//>>>>>>> 91c7d62d91394e7dad34ec610fdc69b50ecf6ad2
 
-void Matrix::swapRows(int& r1, int& r2)
+template <typename T>
+void Matrix<T>::swapRows(int& r1, int& r2)
 {
-    std::vector<T> tmp_v = raw_matrix_[r1];
+    std::vector<T> temp = raw_matrix_[r1];
     raw_matrix_[r1] = raw_matrix_[r2];
     raw_matrix_[r2] = temp;
 }
@@ -97,7 +117,7 @@ Matrix& Matrix::operator-=(const Matrix& m)
 
 
 /*
-void Matrix::allocSpace()
+void Matrix<T>::allocSpace()
 {
 	p = new double*[rows_];
 	for (int i = 0; i < rows_; ++i) {
@@ -105,8 +125,5 @@ void Matrix::allocSpace()
 	}
 }
 */
-
-
-
 
 #endif // __MATRIX_DEFINITION_HPP__

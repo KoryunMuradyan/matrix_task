@@ -17,6 +17,7 @@ public:
 	Matrix(int&, int&);
 	Matrix(int&, int&, T&);
 	Matrix(std::vector<std::vector<T>>&);
+	void swapRows(int&, int&);
 	Matrix(const Matrix&);
 	Matrix& operator=(const Matrix&);
 	
@@ -24,8 +25,8 @@ public:
 private:
 	std::vector<T> operator+(std::vector<T>&,  std::vector<T>&);
 
-}
+}; // class Matrix
 
-}
+} // namespace math
 
 #endif // __MATRIX_HPP__
