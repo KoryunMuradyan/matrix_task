@@ -17,13 +17,14 @@ public:
 	Matrix(int&, int&);
 	Matrix(int&, int&, T&);
 	Matrix(std::vector<std::vector<T>>&);
+	void swapRows(int&, int&);
 	Matrix(const Matrix&);
 	Matrix& operator=(const Matrix&);
 	
 	Matrix transpose();
 
-}
+}; // class Matrix
 
-}
+} // namespace math
 
 #endif // __MATRIX_HPP__
