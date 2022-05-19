@@ -15,10 +15,11 @@ private:
 public:o
        Matrix obj;
 	Matrix();
-
 	Matrix(int&, int&);
-
 	Matrix(int&, int&, T&);
+	Matrix(std::vector<std::vector<T>>&);
+
+	Matrix transpose();
 
 
 }
