@@ -35,7 +35,7 @@ void test_gaus_method() {
 					[&vec_2d_int](std::string str_to_pass) 
 			{NumLinetoIntVec(vec_2d_int, str_to_pass);}
 	);
-	for_each(vec_2d_int.begin(), vec_2d_int.end(), 
+	std::for_each(vec_2d_int.begin(), vec_2d_int.end(), 
 		[](std::vector<T> v) { 
 			std::copy(v.begin(), v.end(), 
 			std::ostream_iterator<T>(std::cout, " "));

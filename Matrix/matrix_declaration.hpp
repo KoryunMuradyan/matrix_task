@@ -12,15 +12,15 @@ private:
 	std::vector<std::vector<T>> raw_matrix_;
 
 	void allocSpace();
-public:o
-       Matrix obj;
+public:
 	Matrix();
 	Matrix(int&, int&);
 	Matrix(int&, int&, T&);
 	Matrix(std::vector<std::vector<T>>&);
-
+	Matrix(const Matrix&);
+	Matrix& operator=(const Matrix&);
+	
 	Matrix transpose();
-
 
 }
 
