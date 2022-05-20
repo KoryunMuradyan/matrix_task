@@ -69,29 +69,6 @@ Matrix Matrix::transpone()
 	return ret;
 }
 
-//template <typename T>
-//Matrix<T> Matrix<T>::transpose()
-//{
-//	Matrix ret(cols_, rows_);
-//	for (int i = 0; i < rows_; ++i) {
-//		for (int j = 0; j < cols_; ++j) {
-//			ret.p[j][i] = p[i][j];
-//		}
-//	}
-//	return ret;
-//}
-//template <typename T>
-//Matrix<T> Matrix<T>::transpose()
-//{
-//	Matrix<T> ret(cols_, rows_);
-//	for (int i = 0; i < rows_; ++i) {
-//		for (int j = 0; j < cols_; ++j) {
-//			ret.p[j][i] = p[i][j];
-//		}
-//	}
-//	return ret;
-//}
-
 template <typename T>
 void Matrix<T>::swapRows(int& r1, int& r2)
 {
@@ -101,34 +78,94 @@ void Matrix<T>::swapRows(int& r1, int& r2)
 }
 
 template <typename T>
-std::vector<T> Matrix<T>::operator+(std::vector<T>& v2)
+Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& m)
 {
-	std::transform (this->begin(), this->end(), v2.begin(), this->begin(), std::plus<T>());
+	auto it_this = this->begin();
+	std::for_each(m.begin(), m.end(),
+			[&it_this](auto &i_m) {
+				std::transform(
+					it_this->begin(), it_this->end(), 
+					i_m.begin(), it_this->begin(), 
+					std::plus<T>()
+				);
+				it_this++;
+			}
+	);
 	return *this;
 }
 
 template <typename T>
-Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& m)
+Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& m)
 {
-    for (int i = 0; i < rows_; ++i) {
-        for (int j = 0; j < cols_; ++j) {
-            m[i][j] += m.p[i][j];
-        }
-    }
-    return *this;
+	auto it_this = this->begin();
+	std::for_each(m.begin(), m.end(),
+			[&it_this](auto &i_m) {
+				std::transform(
+					it_this->begin(), it_this->end(), 
+					i_m.begin(), it_this->begin(), 
+					std::minus<T>()
+				);
+				it_this++;
+			}
+	);
+	return *this;
 }
 
 template <typename T>
-Matrix<T>& Matrix<T>::operator-=(const Matrix& m)
+Matrix<T>& Matrix<T>::operator*=(T Matrix<T>& m)
 {
-    for (int i = 0; i < rows_; ++i) {
-        for (int j = 0; j < cols_; ++j) {
-            p[i][j] -= m.p[i][j];
-        }
-    }
-    return *this;
+	/*// in this case an exception should be thrown (TO DO)
+	if(this->cols_ != m.rows_) {
+		throw
+	}
+	*/
+	auto it_this = this->begin();
+
+	std::for_each(this->begin(), this->end(), 
+		
+	)
+	std::for_each(m.begin(), m.end(),
+			[&it_this](auto &i_m) {
+				std::transform(
+					it_this->begin(), it_this->end(), 
+					i_m.begin(), it_this->begin(), 
+					std::minus<T>()
+				);
+				it_this++;
+			}
+	);
+	return *this;
 }
 
+template <typename T>
+Matrix<T>& Matrix<T>::operator*=(T& arg_mult_num)
+{
+	std::for_each(this->begin(), this->end, 
+		[](auto& i_vec) {
+			std::transform(i_vec.begin(), i_vec.end(), i_vec.begin(), 
+				[](T& num) -> T {
+					return num * arg_mult_num; 
+				}
+			)
+		}
+	);
+	return *this;
+}
+
+template <typename T>
+Matrix<T>& Matrix<T>::operator/=(T& arg_mult_num)
+{
+	std::for_each(this->begin(), this->end, 
+		[](auto& i_vec) {
+			std::transform(i_vec.begin(), i_vec.end(), i_vec.begin(), 
+				[](T& num) -> T {
+					return num / arg_mult_num; 
+				}
+			)
+		}
+	);
+	return *this;
+}
 
 /*
 void Matrix<T>::allocSpace()
