@@ -36,13 +36,8 @@ Matrix<T>::Matrix(std::vector<std::vector<T>>& arg_vec)
 
 }
 
-<<<<<<< HEAD
-Matrix::Matrix(const Matrix& m) 
-=======
-//<<<<<<< HEAD
 template <typename T>
 Matrix<T>::Matrix(const Matrix& m) 
->>>>>>> d34cab864dbc92d834ab4722be95aa445bf99e3d
 	: rows_(m.rows_)
 	, cols_(m.cols_)
 {
@@ -50,11 +45,7 @@ Matrix<T>::Matrix(const Matrix& m)
 }
 
 template <typename T>
-<<<<<<< HEAD
-Matrix& Matrix::operator=(const Matrix& m)
-=======
 Matrix<T>& Matrix<T>::operator=(const Matrix& m)
->>>>>>> d34cab864dbc92d834ab4722be95aa445bf99e3d
 {
     if (this == &m) {
         return *this;
@@ -65,8 +56,6 @@ Matrix<T>& Matrix<T>::operator=(const Matrix& m)
     this->raw_matrix_ = m.raw_matrix_;
     return *this;
 }
-
-<<<<<<< HEAD
 
 template <typename T>
 Matrix Matrix::transpone()
@@ -80,7 +69,6 @@ Matrix Matrix::transpone()
 	return ret;
 }
 
-=======
 //template <typename T>
 //Matrix<T> Matrix<T>::transpose()
 //{
@@ -92,8 +80,6 @@ Matrix Matrix::transpone()
 //	}
 //	return ret;
 //}
-//=======
->>>>>>> d34cab864dbc92d834ab4722be95aa445bf99e3d
 //template <typename T>
 //Matrix<T> Matrix<T>::transpose()
 //{
@@ -115,22 +101,14 @@ void Matrix<T>::swapRows(int& r1, int& r2)
 }
 
 template <typename T>
-<<<<<<< HEAD
-std::vector<T> Matrix::operator+(std::vector<T>& v1,  std::vector<T>& v2)
-=======
 std::vector<T> Matrix<T>::operator+(std::vector<T>& v2)
->>>>>>> d34cab864dbc92d834ab4722be95aa445bf99e3d
 {
 	std::transform (this->begin(), this->end(), v2.begin(), this->begin(), std::plus<T>());
 	return *this;
 }
 
 template <typename T>
-<<<<<<< HEAD
-Matrix& Matrix::operator+=(const Matrix& m)
-=======
 Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& m)
->>>>>>> d34cab864dbc92d834ab4722be95aa445bf99e3d
 {
     for (int i = 0; i < rows_; ++i) {
         for (int j = 0; j < cols_; ++j) {
@@ -141,11 +119,7 @@ Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& m)
 }
 
 template <typename T>
-<<<<<<< HEAD
-Matrix& Matrix::operator-=(const Matrix& m)
-=======
 Matrix<T>& Matrix<T>::operator-=(const Matrix& m)
->>>>>>> d34cab864dbc92d834ab4722be95aa445bf99e3d
 {
     for (int i = 0; i < rows_; ++i) {
         for (int j = 0; j < cols_; ++j) {
