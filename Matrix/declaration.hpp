@@ -25,12 +25,6 @@ public:
 	Matrix transpose();
 	std::vector<T> operator+(std::vector<T>&);
 private:
-	/*
-<<<<<<< HEAD
-=======
->>>>>>> d34cab864dbc92d834ab4722be95aa445bf99e3d
-*/
-
 }; // class Matrix
 
 } // namespace math
