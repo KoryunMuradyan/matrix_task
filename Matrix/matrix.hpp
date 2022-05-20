@@ -58,12 +58,12 @@ Matrix<T>& Matrix<T>::operator=(const Matrix& m)
 }
 
 template <typename T>
-Matrix Matrix::transpone()
+typename Matrix<T> Matrix::transpose()
 {
 	Matrix ret(cols_, rows_);
 	for (int i = 0; i < rows_; ++i) {
 		for (int j = 0; j < cols_; ++j) {
-			ret.p[j][i] = p[i][j];
+			ret.raw_matrix_[j][i] = raw_matrix_[i][j];
 		}
 	}
 	return ret;
@@ -112,13 +112,14 @@ Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& m)
 }
 
 template <typename T>
-Matrix<T>& Matrix<T>::operator*=(T Matrix<T>& m)
+Matrix<T>& Matrix<T>::operator*(Matrix<T>& m)
 {
 	/*// in this case an exception should be thrown (TO DO)
 	if(this->cols_ != m.rows_) {
 		throw
 	}
 	*/
+	std::vector<std::vector<T>> result_vec(this->rows_);
 	auto it_this = this->begin();
 
 	std::for_each(this->begin(), this->end(), 
