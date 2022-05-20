@@ -36,7 +36,6 @@ Matrix<T>::Matrix(std::vector<std::vector<T>>& arg_vec)
 
 }
 
-//<<<<<<< HEAD
 Matrix::Matrix(const Matrix& m) 
 	: rows_(m.rows_)
 	, cols_(m.cols_)
@@ -69,7 +68,7 @@ Matrix Matrix::transpone()
 	}
 	return ret;
 }
-//=======
+
 //template <typename T>
 //Matrix<T> Matrix<T>::transpose()
 //{
@@ -81,7 +80,6 @@ Matrix Matrix::transpone()
 //	}
 //	return ret;
 //}
-//>>>>>>> 91c7d62d91394e7dad34ec610fdc69b50ecf6ad2
 
 template <typename T>
 void Matrix<T>::swapRows(int& r1, int& r2)
