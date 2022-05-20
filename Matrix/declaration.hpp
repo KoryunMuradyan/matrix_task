@@ -23,7 +23,6 @@ public:
 	
 	Matrix transpose();
 private:
-	std::vector<T> operator+(std::vector<T>&,  std::vector<T>&);
 
 }; // class Matrix
 

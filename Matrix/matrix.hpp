@@ -44,6 +44,7 @@ Matrix::Matrix(const Matrix& m)
 	this->raw_matrix_ = m.raw_matrix_;
 }
 
+template <typename T>
 Matrix& Matrix::operator=(const Matrix& m)
 {
     if (this == &m) {
@@ -57,6 +58,7 @@ Matrix& Matrix::operator=(const Matrix& m)
 }
 
 
+template <typename T>
 Matrix Matrix::transpone()
 {
 	Matrix ret(cols_, rows_);
@@ -89,12 +91,14 @@ void Matrix<T>::swapRows(int& r1, int& r2)
     raw_matrix_[r2] = temp;
 }
 
+template <typename T>
 std::vector<T> Matrix::operator+(std::vector<T>& v1,  std::vector<T>& v2)
 {
 	std::transform (v1.begin(), v1.end(), v2.begin(), v1.begin(), std::plus<T>());
 	return *this;
 }
 
+template <typename T>
 Matrix& Matrix::operator+=(const Matrix& m)
 {
     for (int i = 0; i < rows_; ++i) {
@@ -105,6 +109,7 @@ Matrix& Matrix::operator+=(const Matrix& m)
     return *this;
 }
 
+template <typename T>
 Matrix& Matrix::operator-=(const Matrix& m)
 {
     for (int i = 0; i < rows_; ++i) {
