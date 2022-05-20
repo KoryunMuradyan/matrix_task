@@ -21,14 +21,12 @@ public:
 	Matrix(const Matrix&);
 	Matrix& operator=(const Matrix&);
 	Matrix& operator+=(const Matrix&);
-	
-	Matrix transpose();
-private:
-<<<<<<< HEAD
-=======
+	Matrix& operator-=(const Matrix&);
+	Matrix& operator*(const Matrix&);
+	Matrix& operator*=(T&);
+	Matrix& operator/=(T&);
 	std::vector<T> operator+(std::vector<T>&);
->>>>>>> d34cab864dbc92d834ab4722be95aa445bf99e3d
-
+	Matrix transpose();
 }; // class Matrix
 
 } // namespace math

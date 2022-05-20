@@ -58,12 +58,12 @@ Matrix<T>& Matrix<T>::operator=(const Matrix& m)
 }
 
 template <typename T>
-Matrix Matrix::transpone()
+Matrix<T> Matrix<T>::transpose()
 {
 	Matrix ret(cols_, rows_);
 	for (int i = 0; i < rows_; ++i) {
 		for (int j = 0; j < cols_; ++j) {
-			ret.p[j][i] = p[i][j];
+			ret.raw_matrix_[j][i] = raw_matrix_[i][j];
 		}
 	}
 	return ret;
@@ -111,42 +111,42 @@ Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& m)
 	return *this;
 }
 
-template <typename T>
-Matrix<T>& Matrix<T>::operator*=(T Matrix<T>& m)
-{
-	/*// in this case an exception should be thrown (TO DO)
-	if(this->cols_ != m.rows_) {
-		throw
-	}
-	*/
-	auto it_this = this->begin();
-
-	std::for_each(this->begin(), this->end(), 
-		
-	)
-	std::for_each(m.begin(), m.end(),
-			[&it_this](auto &i_m) {
-				std::transform(
-					it_this->begin(), it_this->end(), 
-					i_m.begin(), it_this->begin(), 
-					std::minus<T>()
-				);
-				it_this++;
-			}
-	);
-	return *this;
-}
+//template <typename T>
+//Matrix<T>& Matrix<T>::operator*(const Matrix<T>& m)
+//{
+//	/*// in this case an exception should be thrown (TO DO)
+//	if(this->cols_ != m.rows_) {
+//		throw
+//	}
+//	*/
+//	auto it_this = this->begin();
+//
+//	std::for_each(this->begin(), this->end(), 
+//		
+//	)
+//	std::for_each(m.begin(), m.end(),
+//			[&it_this](auto &i_m) {
+//				std::transform(
+//					it_this->begin(), it_this->end(), 
+//					i_m.begin(), it_this->begin(), 
+//					std::minus<T>()
+//				);
+//				it_this++;
+//			}
+//	);
+//	return *this;
+//}
 
 template <typename T>
 Matrix<T>& Matrix<T>::operator*=(T& arg_mult_num)
 {
 	std::for_each(this->begin(), this->end, 
-		[](auto& i_vec) {
+		[&arg_mult_num](auto& i_vec) {
 			std::transform(i_vec.begin(), i_vec.end(), i_vec.begin(), 
-				[](T& num) -> T {
+				[&arg_mult_num](T& num) -> T {
 					return num * arg_mult_num; 
 				}
-			)
+			);
 		}
 	);
 	return *this;
@@ -156,12 +156,12 @@ template <typename T>
 Matrix<T>& Matrix<T>::operator/=(T& arg_mult_num)
 {
 	std::for_each(this->begin(), this->end, 
-		[](auto& i_vec) {
+		[&arg_mult_num](auto& i_vec) {
 			std::transform(i_vec.begin(), i_vec.end(), i_vec.begin(), 
-				[](T& num) -> T {
+				[&arg_mult_num](T& num) -> T {
 					return num / arg_mult_num; 
 				}
-			)
+			);
 		}
 	);
 	return *this;
