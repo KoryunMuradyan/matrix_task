@@ -58,11 +58,7 @@ Matrix<T>& Matrix<T>::operator=(const Matrix& m)
 }
 
 template <typename T>
-<<<<<<< HEAD
-typename Matrix<T> Matrix::transpose()
-=======
 Matrix<T> Matrix<T>::transpose()
->>>>>>> f0a41fb13e6f64141e773af039eb6be681115bd6
 {
 	Matrix ret(cols_, rows_);
 	for (int i = 0; i < rows_; ++i) {
@@ -115,34 +111,50 @@ Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& m)
 	return *this;
 }
 
-<<<<<<< HEAD
 template <typename T>
-Matrix<T>& Matrix<T>::operator*(Matrix<T>& m)
+Matrix<T>& Matrix<T>::operator*=(Matrix<T>& m)
 {
 	/*// in this case an exception should be thrown (TO DO)
 	if(this->cols_ != m.rows_) {
 		throw
 	}
 	*/
-	std::vector<std::vector<T>> result_vec(this->rows_);
-	auto it_this = this->begin();
-
+	std::vector<std::vector<T> > vec_to_return(this->rows_);
+	auto tmp_vec = m.transpose();
+	
+	auto res_vec_it = result_vec.begin();
+	auto tmp_vec_it = tmp_vec.begin();
 	std::for_each(this->begin(), this->end(), 
-		
-	)
+		[&tmp_vec_it](auto& i_this_vec) { 
+			std::vector<T> tmp_v_to_push;
+			std::for_each(tmp_vec_it->begin(), tmp_vec_it->end(), 
+				[&i_this_vec, &tmp_v_to_push](auto& j_vec) {
+					T num_to_pushback = T(NULL);
+					boost::for_each(i_this_vec, j_vec, 
+					[&num_to_pushback](T &a, T& b) { 
+						num_to_pushback += (a*b);
+						}
+					);
+					tmp_v_to_push.push_back(num_to_pushback);
+				}
+			);
+			i_this_vec.swap(tmp_v_to_push);
+		}
+	);
+
 	std::for_each(m.begin(), m.end(),
-			[&it_this](auto &i_m) {
-				std::transform(
-					it_this->begin(), it_this->end(), 
-					i_m.begin(), it_this->begin(), 
-					std::minus<T>()
-				);
-				it_this++;
-			}
+		[&it_this](auto &i_m) {
+			std::transform(
+				it_this->begin(), it_this->end(), 
+				i_m.begin(), it_this->begin(), 
+				
+			);
+			it_this++;
+		}
 	);
 	return *this;
 }
-=======
+
 //template <typename T>
 //Matrix<T>& Matrix<T>::operator*(const Matrix<T>& m)
 //{
@@ -168,7 +180,6 @@ Matrix<T>& Matrix<T>::operator*(Matrix<T>& m)
 //	);
 //	return *this;
 //}
->>>>>>> f0a41fb13e6f64141e773af039eb6be681115bd6
 
 template <typename T>
 Matrix<T>& Matrix<T>::operator*=(T& arg_mult_num)

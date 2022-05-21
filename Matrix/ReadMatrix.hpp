@@ -17,7 +17,7 @@ void NumLinetoIntVec(std::vector<std::vector<T>>& arg_vec,
     arg_vec.push_back(v);
 }
 
-std::vector<std::string> str_seq_to_int_vec(std::string& arg_str) {
+std::vector<std::string> str_seq_to_int_vec(const std::string& arg_str) {
 	std::vector<std::string> strings_vec;
 	std::istringstream f(arg_str);
 	std::string s;    
@@ -30,7 +30,7 @@ std::vector<std::string> str_seq_to_int_vec(std::string& arg_str) {
 template <typename T>
 void MatrixRead() {
 	std::ifstream file_to_read("file.txt");
-	std::string str_file((std::istreambuf_iterator<char>(file_to_read)),
+	const std::string str_file((std::istreambuf_iterator<char>(file_to_read)),
 					std::istreambuf_iterator<char>());
 	std::vector<std::string> num_string_vec = str_seq_to_int_vec(str_file);
 	std::vector<std::vector<T>> vec_2d_int;

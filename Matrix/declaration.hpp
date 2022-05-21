@@ -1,6 +1,8 @@
 #ifndef __MATRIX_HPP__
 #define __MATRIX_HPP__
 
+#include <boost/range/algorithm_ext/for_each.hpp>
+
 namespace math 
 {
 
@@ -24,6 +26,7 @@ public:
 	
 	Matrix transpose();
 	std::vector<T> operator+(std::vector<T>&);
+	Matrix<T>& operator-=(const Matrix<T>& m);
 private:
 }; // class Matrix
 
