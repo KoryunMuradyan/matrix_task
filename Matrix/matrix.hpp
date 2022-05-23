@@ -114,20 +114,11 @@ Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& m)
 template <typename T>
 Matrix<T>& Matrix<T>::operator*=(Matrix<T>& m)
 {
-	/*// in this case an exception should be thrown (TO DO)
-	if(this->cols_ != m.rows_) {
-		throw
-	}
-	*/
-	std::vector<std::vector<T> > vec_to_return(this->rows_);
 	auto tmp_vec = m.transpose();
-	
-	auto res_vec_it = result_vec.begin();
-	auto tmp_vec_it = tmp_vec.begin();
 	std::for_each(this->begin(), this->end(), 
-		[&tmp_vec_it](auto& i_this_vec) { 
+		[&tmp_vec](auto& i_this_vec) { 
 			std::vector<T> tmp_v_to_push;
-			std::for_each(tmp_vec_it->begin(), tmp_vec_it->end(), 
+			std::for_each(tmp_vec.begin(), tmp_vec.end(), 
 				[&i_this_vec, &tmp_v_to_push](auto& j_vec) {
 					T num_to_pushback = T(NULL);
 					boost::for_each(i_this_vec, j_vec, 
@@ -139,17 +130,6 @@ Matrix<T>& Matrix<T>::operator*=(Matrix<T>& m)
 				}
 			);
 			i_this_vec.swap(tmp_v_to_push);
-		}
-	);
-
-	std::for_each(m.begin(), m.end(),
-		[&it_this](auto &i_m) {
-			std::transform(
-				it_this->begin(), it_this->end(), 
-				i_m.begin(), it_this->begin(), 
-				
-			);
-			it_this++;
 		}
 	);
 	return *this;
