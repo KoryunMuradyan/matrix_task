@@ -135,32 +135,6 @@ Matrix<T>& Matrix<T>::operator*=(Matrix<T>& m)
 	return *this;
 }
 
-//template <typename T>
-//Matrix<T>& Matrix<T>::operator*(const Matrix<T>& m)
-//{
-//	/*// in this case an exception should be thrown (TO DO)
-//	if(this->cols_ != m.rows_) {
-//		throw
-//	}
-//	*/
-//	auto it_this = this->begin();
-//
-//	std::for_each(this->begin(), this->end(), 
-//		
-//	)
-//	std::for_each(m.begin(), m.end(),
-//			[&it_this](auto &i_m) {
-//				std::transform(
-//					it_this->begin(), it_this->end(), 
-//					i_m.begin(), it_this->begin(), 
-//					std::minus<T>()
-//				);
-//				it_this++;
-//			}
-//	);
-//	return *this;
-//}
-
 template <typename T>
 Matrix<T>& Matrix<T>::operator*=(T& arg_mult_num)
 {
@@ -191,14 +165,5 @@ Matrix<T>& Matrix<T>::operator/=(T& arg_mult_num)
 	return *this;
 }
 
-/*
-void Matrix<T>::allocSpace()
-{
-	p = new double*[rows_];
-	for (int i = 0; i < rows_; ++i) {
-		p[i] = new double[cols_];
-	}
-}
-*/
 
 #endif // __MATRIX_DEFINITION_HPP__
