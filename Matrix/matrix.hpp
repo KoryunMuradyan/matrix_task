@@ -1,6 +1,7 @@
 #ifndef __MATRIX_DEFINITION_HPP__
 #define __MATRIX_DEFINITION_HPP__
 
+#include <functional>   // std::bind
 #include "declaration.hpp"
 #include <map>
 
@@ -167,20 +168,25 @@ Matrix<T>& Matrix<T>::operator/=(T& arg_mult_num)
 }
 
 template <typename T>
+bool Matrix<T>::Not_Zero(T& arg)
+{
+	return arg != 0 ;
+}
+
+template <typename T>
 void Matrix<T>::gaussianEliminate()
 {
 	std::multimap<int, std::vector<T>> tmp_mltmap;
 	int row_size = int(this->cols_ - 1);
 	std::for_each(this->raw_matrix_.begin(), this->raw_matrix_.end(), 
 		[&row_size, &tmp_mltmap](std::vector<T> i) {
-			auto front_zero_num = std::find(i.begin(), i.end(), 
-				Not_Zero
-			);
-			int pos = int(front_zero_num - i.begin);
-			if (pos == row_size) {
-				pos = -1;
-			}
-			tmp_mltmap.insert(std::pair<int, std::vector<int>>(pos, i));
+			auto front_zero_num = std::find(i.begin(), i.end(), Not_Zero
+		);
+		int tmp = int(front_zero_num - i.begin());
+		   if (tmp == row_size) {
+			tmp = -1;
+		   }
+		tmp_mltmap.insert(std::pair<int, std::vector<int>>(tmp, i));
 		}
 	);
 	auto it = this->raw_matrix_.begin();
@@ -189,7 +195,7 @@ void Matrix<T>::gaussianEliminate()
 				*it++ == i.second;
 			}
 	);
-//	arg_vec.reverse();
+	//i.reverse();
 	
 }
 
@@ -202,7 +208,7 @@ void Matrix<T>::gausHelper(std::vector<std::vector<T>>& arg_vec)
 	std::for_each(arg_vec.begin(), arg_vec.end(), 
 		[&arg_vec, &it](auto i){
 			int No_zero_num1 = std::find_if(i.begin(), i.end(), 
-					Not_Zero
+					Matrix<T>::Not_Zero
 			);
 			int No_zero_num2 = std::find_if(it->begin(), it->end(), 
 					Not_Zero
@@ -236,14 +242,7 @@ T Matrix<T>::find_LCM(T& arg_num_1, T& arg_num_2)
 	return (arg_num_1*arg_num_2)/gcd; 
 }
 
-template <typename T>
-bool Matrix<T>::Not_Zero(T& arg)
-{
-	return arg != T(NULL);
-}
-
 // Gaus helper functions end
-
 template <typename T>
 void Matrix<T>::print_matrix()
 {
