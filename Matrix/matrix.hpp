@@ -2,6 +2,7 @@
 #define __MATRIX_DEFINITION_HPP__
 
 #include "declaration.hpp"
+#include <map>
 
 using  namespace math;
 
@@ -166,7 +167,7 @@ Matrix<T>& Matrix<T>::operator/=(T& arg_mult_num)
 }
 
 template <typename T>
-Matrix Matrix<T>gaussianEliminate()
+Matrix<T> Matrix<T>::gaussianEliminate()
 {
 	std::multimap<int, std::vector<T>> tmp_mltmap;
 	int row_size = int(this->cols_ - 1);
@@ -176,26 +177,26 @@ Matrix Matrix<T>gaussianEliminate()
 				Not_Zero
 			);
 			int pos = int(front_zero_num - i.begin);
-			if (pos == row_size;) {
+			if (pos == row_size) {
 				pos = -1;
 			}
 			tmp_mltmap.insert(std::pair<int, std::vector<int>>(pos, i));
 		}
-	)
-	
+	);
 	auto it = this->begin();
 	std::for_each(tmp_mltmap.begin(), tmp_mltmap.end(), 
-			[&it](auto i){*it++ = i.second}
-			)
-	
-	arg_vec.reverse();
+			[&it](auto i) {
+				*it++ == i.second;
+			}
+	);
+//	arg_vec.reverse();
 	
 }
 
 // Gaus helper functions start
 
 template <typename T>
-void gausHelper(std::vector<std::vector>>& arg_vec)
+void gausHelper(std::vector<std::vector<T>>& arg_vec)
 {	
 	auto it = arg_vec.begin() + 1;
 	std::for_each(arg_vec.begin(), arg_vec.end(), 

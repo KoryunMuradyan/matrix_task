@@ -12,7 +12,6 @@ class Matrix
 private:
 	int rows_,  cols_;
 	std::vector<std::vector<T>> raw_matrix_;
-
 	void allocSpace();
 public:
 	Matrix();
@@ -22,8 +21,13 @@ public:
 	void swapRows(int&, int&);
 	Matrix(const Matrix&);
 	Matrix& operator=(const Matrix&);
+	Matrix& operator*=(Matrix&);
+        Matrix& operator*=(T&);
 	Matrix& operator+=(const Matrix&);
-	
+        Matrix& operator/=(T&);
+	bool Not_Zero(T&);
+        Matrix gaussianEliminate();
+
 	Matrix transpose();
 	std::vector<T> operator+(std::vector<T>&);
 	Matrix<T>& operator-=(const Matrix<T>& m);
