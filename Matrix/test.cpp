@@ -4,7 +4,10 @@
 
 int main()
 {
-	MatrixRead<float>();
+	auto arg = MatrixRead<int>();
+	math::Matrix<int> obj(arg);
+	obj.gaussianEliminate();
+	obj.print_matrix();
 	return 0;
 }
 

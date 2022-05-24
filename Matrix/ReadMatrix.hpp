@@ -28,7 +28,7 @@ std::vector<std::string> str_seq_to_int_vec(const std::string& arg_str) {
 }
 
 template <typename T>
-void MatrixRead() {
+std::vector<std::vector<T>> MatrixRead() {
 	std::ifstream file_to_read("file.txt");
 	const std::string str_file((std::istreambuf_iterator<char>(file_to_read)),
 					std::istreambuf_iterator<char>());
@@ -45,6 +45,7 @@ void MatrixRead() {
 			std::cout << std::endl;
 		}
 	);
+	return vec_2d_int;
 }
 
 #endif // READ_FROM_FILE
