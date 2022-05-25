@@ -34,7 +34,6 @@ public:
 	Matrix transpose();
 	std::vector<T> operator+(std::vector<T>&);
 	Matrix<T>& operator-=(const Matrix<T>& m);
-private:
 }; // class Matrix
 
 } // namespace math
