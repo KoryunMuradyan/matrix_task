@@ -180,9 +180,9 @@ void Matrix<T>::gaussianEliminate()
 	int row_size = int(this->cols_ - 1);
 	std::for_each(this->raw_matrix_.begin(), this->raw_matrix_.end(), 
 		[&row_size, &tmp_mltmap](std::vector<T> i) {
-			auto front_zero_num = std::find(i.begin(), i.end(), Not_Zero
+			auto front_zero_num = std::find_if(i.begin(), i.end(), Not_Zero
 		);
-		int tmp = int(front_zero_num - i.begin());
+		auto tmp = int(front_zero_num - i.begin());
 		   if (tmp == row_size) {
 			tmp = -1;
 		   }
@@ -196,32 +196,24 @@ void Matrix<T>::gaussianEliminate()
 			}
 	);
 	//i.reverse();
-	
 }
 
 // Gaus helper functions start
-
 template <typename T>
 void Matrix<T>::gausHelper(std::vector<std::vector<T>>& arg_vec)
 {	
 	auto it = arg_vec.begin() + 1;
-	std::for_each(arg_vec.begin(), arg_vec.end(), 
-		[&arg_vec, &it](auto i){
-			int No_zero_num1 = std::find_if(i.begin(), i.end(), 
-					Matrix<T>::Not_Zero
-			);
-			int No_zero_num2 = std::find_if(it->begin(), it->end(), 
-					Not_Zero
-			);
-			if(No_zero_num1 != *i - arg_vec.begin){ 
-				if(No_zero_num1 == No_zero_num2) {
-					auto mult = find_LCM(i[No_zero_num1], 
-							*(it + No_zero_num2));
-					  i *= mult/i[No_zero_num1];
-					*it += mult/(*(it + No_zero_num2));
-				}
+	std::for_each(arg_vec.begin(), arg_vec.end(), [&arg_vec, &it](auto i) {
+	        auto No_zero_num1 = std::find_if(i.begin(), i.end(), Not_Zero);
+		auto No_zero_num2 = std::find_if(it->begin(), it->end(), Not_Zero);
+		if(No_zero_num1 != *i - arg_vec.begin) { 
+			if(No_zero_num1 == No_zero_num2) {
+				auto mult = find_LCM(i[No_zero_num1], *(it + No_zero_num2));
+				i *= mult/i[No_zero_num1];
+				*it += mult/(*(it + No_zero_num2));
 			}
 		}
+	}
 	);
 }
 
@@ -247,12 +239,12 @@ template <typename T>
 void Matrix<T>::print_matrix()
 {
 	std::for_each(this->raw_matrix_.begin(), this->raw_matrix_.end(), 
-		[](auto& i){ std::for_each(i.begin(), i.end(), 
-			[](auto& j){ std::cout << j << " ";}
-		);
-		std::cout << std::endl;
-		}
+	[](auto& i){ std::for_each(i.begin(), i.end(), 
+		[](auto& j){ std::cout << j << " ";}
 	);
+	std::cout << std::endl;
+	}
+);
 }
 
 #endif // __MATRIX_DEFINITION_HPP__
