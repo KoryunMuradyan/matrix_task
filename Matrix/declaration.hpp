@@ -25,15 +25,15 @@ public:
         Matrix& operator*=(T&);
 	Matrix& operator+=(const Matrix&);
         Matrix& operator/=(T&);
+	Matrix<T>& operator-=(const Matrix<T>& m);
+	std::vector<T> operator+(std::vector<T>&);
+	Matrix transpose();
 	static bool Not_Zero(T&);
         void gaussianEliminate();
         void gausHelper(std::vector<std::vector<T>>&);
         T find_GCD(T&, T&);
         T find_LCM(T&, T&);
         void print_matrix();
-	Matrix transpose();
-	std::vector<T> operator+(std::vector<T>&);
-	Matrix<T>& operator-=(const Matrix<T>& m);
 }; // class Matrix
 
 } // namespace math
