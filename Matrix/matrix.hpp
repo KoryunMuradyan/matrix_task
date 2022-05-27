@@ -155,36 +155,39 @@ Matrix<T>& Matrix<T>::operator/=(T& arg_mult_num)
 	return *this;
 }
 
-
 template <typename T>
-void Matrix<T>::gaussianEliminate()
+void Matrix<T>::sort_rows_with_zero()
 {
 	std::multimap<int, std::vector<T>> tmp_mltmap;
 	int row_size = int(this->cols_ - 1);
 	std::for_each(this->raw_matrix_.begin(), this->raw_matrix_.end(), 
-	              [&row_size, &tmp_mltmap](std::vector<T> i) {
-		auto front_zero_num = std::find_if(i.begin(), i.end(), 
-						   Not_Zero);
-		int pos = int(front_zero_num - i.begin());
-		if (pos == row_size) {
+			[&row_size, &tmp_mltmap](std::vector<T> i) {
+			auto front_zero_num = std::find_if(i.begin(), i.end(), 
+					Not_Zero
+					);
+			int pos = int(front_zero_num - i.begin());
+			if (pos == row_size) {
 			pos = -1;
-		}
-		tmp_mltmap.insert(std::pair<int, std::vector<T>>(pos, i));
-		}
-	);
+			}
+			tmp_mltmap.insert(std::pair<int, std::vector<T>>(pos, i));
+
+			}
+		     );
 	auto it = this->raw_matrix_.begin();
 	std::for_each(tmp_mltmap.begin(), tmp_mltmap.end(), 
 			[&it](auto i) {
-				*it++ = i.second;
+			*it++ = i.second;
 			}
-	);
-	std::reverse(raw_matrix_.begin(), raw_matrix_.end());
-	this->gausHelper(this->raw_matrix_);	
+		     );
+}
 
+template <typename T>
+std::vector<std::vector<T>> Matrix<T>::find_unknown_vars_by_known()
+{
 	auto tmp_vec = this->raw_matrix_;
 	*(tmp_vec[0].rbegin() + 1) = *(tmp_vec[0].rbegin()) / 
 				    (*(tmp_vec[0].rbegin() + 1));
-	it = tmp_vec.begin();
+	auto it = tmp_vec.begin();
 	auto vars = _variables;
 	std::for_each(tmp_vec.begin() + 1, tmp_vec.end(), 
 		      [&vars, &it](auto& i) {
@@ -202,6 +205,16 @@ void Matrix<T>::gaussianEliminate()
 	std::string str_tmp = "x" + std::to_string(cols_);
 	_variables.insert(std::pair<std::string, T>(str_tmp,
 			  T(*(tmp_vec[0].rbegin() + 1))));
+	return tmp_vec;
+}
+
+template <typename T>
+void Matrix<T>::gaussianEliminate()
+{	
+	sort_rows_with_zero();
+	std::reverse(raw_matrix_.begin(), raw_matrix_.end());
+	this->gausHelper(this->raw_matrix_);	
+	auto tmp_vec = find_unknown_vars_by_known();
 	defineVariables(tmp_vec);
 }
 

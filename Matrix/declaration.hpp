@@ -15,13 +15,8 @@ private:
 	std::vector<std::vector<T>> raw_matrix_;
 	void allocSpace();
 	void swapRows(int&, int&);
-        void print_matrix();
-	void gausHelper(std::vector<std::vector<T>>&);
-	void defineVariables(std::vector<std::vector<T>>&);
-	static bool Not_Zero(T&);
-	Matrix transpose();
-	static T find_GCD(T, T);
-	static T find_LCM(const T&, const T&);
+	std::vector<std::vector<T>> find_unknown_vars_by_known();             
+	void sort_rows_with_zero();                                           
 public:
 	Matrix();
 	Matrix(int&, int&);
@@ -33,10 +28,18 @@ public:
         Matrix& operator*=(T&);
 	Matrix& operator+=(const Matrix&);
         Matrix& operator/=(T&);
+        void gaussianEliminate();
+	void gausHelper(std::vector<std::vector<T>>&);
+	void defineVariables(std::vector<std::vector<T>>&);
+	static bool Not_Zero(T&);
+        void print_matrix();
+	Matrix transpose();
 	std::vector<T> operator+(std::vector<T>&);
 	Matrix<T>& operator-=(const Matrix<T>& m);
-        void gaussianEliminate();
 	void print_vars();
+private:
+	static T find_GCD(T, T);
+	static T find_LCM(const T&, const T&);
 }; // class Matrix
 
 } // namespace math
