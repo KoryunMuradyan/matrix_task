@@ -209,16 +209,6 @@ std::vector<std::vector<T>> Matrix<T>::find_unknown_vars_by_known()
 }
 
 template <typename T>
-void Matrix<T>::gaussianEliminate()
-{	
-	sort_rows_with_zero();
-	std::reverse(raw_matrix_.begin(), raw_matrix_.end());
-	this->gausHelper(this->raw_matrix_);	
-	auto tmp_vec = find_unknown_vars_by_known();
-	defineVariables(tmp_vec);
-}
-
-template <typename T>
 void Matrix<T>::defineVariables(std::vector<std::vector<T>>& arg_vec)
 {
 	auto ptr_vars = &_variables;
@@ -236,45 +226,58 @@ void Matrix<T>::defineVariables(std::vector<std::vector<T>>& arg_vec)
 }
 
 template <typename T>
+void Matrix<T>::gaussianEliminate()
+{	
+	sort_rows_with_zero();
+	std::reverse(raw_matrix_.begin(), raw_matrix_.end());
+	this->gausHelper(this->raw_matrix_);	
+	auto tmp_vec = find_unknown_vars_by_known();
+	defineVariables(tmp_vec);
+}
+
+
+template <typename T>
+void Matrix<T>::modifie_by_gaus(int pos1, int pos2, std::vector<T>& tmp_v,
+	std::vector<T>& i, std::vector<std::vector<T>>& arg_vec)
+{
+	auto it = arg_vec.begin();
+	if (pos1 == pos2) {
+		T mult = find_LCM(abs(i[pos1]), abs(tmp_v[pos1]));
+		T mult_i = mult / i[pos1];
+		T mult_it = mult/tmp_v[pos1];
+		std::transform(i.begin(), i.end(), i.begin(),
+				std::bind1st(std::multiplies<T>(), mult_i));
+		std::transform(it->begin(), it->end(), tmp_v.begin(),
+				std::bind1st(std::multiplies<T>(), mult_it));
+		if (mult_i*i[pos1] == -(mult_it*tmp_v[pos1])) {
+			std::transform(i.begin(), i.end(), tmp_v.begin(), 
+					i.begin(),
+					std::plus<T>());
+		} else {
+			std::transform(i.begin(), i.end(), tmp_v.begin(),
+					i.begin(), 
+					std::minus<T>());
+		}
+	}	
+}
+
+template <typename T>
 void Matrix<T>::gausHelper(std::vector<std::vector<T>>& arg_vec)
 {	
 	auto it = arg_vec.begin();
 	std::for_each(arg_vec.begin(), arg_vec.end() - 1, 
-		      [&arg_vec, &it](auto& i) {
+		      [&arg_vec, &it, this](auto& i) {
 		it++;
 		auto No_zero_num1 = std::find_if(i.begin(), i.end(), Not_Zero);
 		auto No_zero_num2 = std::find_if(it->begin(), it->end(), 
 					         Not_Zero);
 		int pos1 = int(No_zero_num1 - i.begin());
 		int pos2 = int(No_zero_num2 - it->begin());
+		std::vector<T> tmp_v = *it;
 		if (pos1 != int(i.size())) { 
-			if (pos1 == pos2) {
-				std::vector<T> tmp_v = *it;
-				T mult = find_LCM(abs(i[pos1]),
-						  abs(tmp_v[pos1]));
-				T mult_i = mult/i[pos1];
-				T mult_it = mult/tmp_v[pos1];
-				std::transform(i.begin(), i.end(), i.begin(),
-					std::bind1st(std::multiplies<T>(), 
-						     mult_i));
-				std::transform(it->begin(), it->end(), 
-					       tmp_v.begin(),
-					       std::bind1st(
-							std::multiplies<T>(),
-							mult_it));
-				if (mult_i*i[pos1] == -(mult_it*tmp_v[pos1])) {
-					std::transform(i.begin(), i.end(),
-						       tmp_v.begin(), 
-						       i.begin(),
-						       std::plus<T>());
-				} else {
-					std::transform(i.begin(), i.end(), 
-						       tmp_v.begin(),
-						       i.begin(), 
-						       std::minus<T>());
-				}
-			}	
+			Matrix<T>::modifie_by_gaus(pos1, pos2, tmp_v, i, arg_vec);
 		}
+
 	} );
 	if (*((arg_vec.begin())->end() - 3) != 0) {
 		gausHelper(arg_vec);

@@ -17,6 +17,9 @@ private:
 	void swapRows(int&, int&);
 	std::vector<std::vector<T>> find_unknown_vars_by_known();             
 	void sort_rows_with_zero();                                           
+	void gausHelper(std::vector<std::vector<T>>&);
+        void modifie_by_gaus(int, int, std::vector<T>&, std::vector<T>&, 
+			std::vector<std::vector<T>>&);      
 public:
 	Matrix();
 	Matrix(int&, int&);
@@ -29,7 +32,6 @@ public:
 	Matrix& operator+=(const Matrix&);
         Matrix& operator/=(T&);
         void gaussianEliminate();
-	void gausHelper(std::vector<std::vector<T>>&);
 	void defineVariables(std::vector<std::vector<T>>&);
 	static bool Not_Zero(T&);
         void print_matrix();
