@@ -1,8 +1,10 @@
 #ifndef __MATRIX_DEFINITION_HPP__
 #define __MATRIX_DEFINITION_HPP__
 
-#include "declaration.hpp"
+#include <numeric>
 #include <map>
+#include <cstdlib>
+#include "declaration.hpp"
 
 using  namespace math;
 
@@ -19,7 +21,7 @@ Matrix<T>::Matrix(int& arg_rows, int& arg_cols)
 	: rows_(arg_rows)
 	, cols_(arg_cols)
 {
-	std::vector<std::vector<T>> vec(rows_, std::vector<T>(cols_, T(NULL)));
+	std::vector<std::vector<T>> raw_matrix_(rows_, std::vector<T>(cols_, T(NULL)));
 }
 
 template <typename T>
@@ -27,14 +29,15 @@ Matrix<T>::Matrix(int& arg_rows, int& arg_cols, T& arg_val)
 	: rows_(arg_rows)
 	, cols_(arg_cols)
 {
-	std::vector<std::vector<T>> vec(rows_, std::vector<T>(cols_, arg_val));
+	std::vector<std::vector<T>> raw_matrix_(rows_, std::vector<T>(cols_, arg_val));
 }
 
 template <typename T>
 Matrix<T>::Matrix(std::vector<std::vector<T>>& arg_vec) 
 	: raw_matrix_(arg_vec)
 {
-
+	this->cols_ = int(arg_vec[1].size());
+	this->cols_ = int(arg_vec.size());
 }
 
 template <typename T>
@@ -43,6 +46,7 @@ Matrix<T>::Matrix(const Matrix& m)
 	, cols_(m.cols_)
 {
 	this->raw_matrix_ = m.raw_matrix_;
+	this->_variables = m._variables;
 }
 
 template <typename T>
@@ -180,26 +184,70 @@ void Matrix<T>::gaussianEliminate()
 			if (pos == row_size) {
 				pos = -1;
 			}
-			tmp_mltmap.insert(std::pair<int, std::vector<int>>(pos, i));
+			tmp_mltmap.insert(std::pair<int, std::vector<T>>(pos, i));
 		}
 	);
 	auto it = this->raw_matrix_.begin();
 	std::for_each(tmp_mltmap.begin(), tmp_mltmap.end(), 
 			[&it](auto i) {
-				*it++ == i.second;
+				*it++ = i.second;
 			}
 	);
 	std::reverse(raw_matrix_.begin(), raw_matrix_.end());
 	this->gausHelper(this->raw_matrix_);	
+
+	auto tmp_vec = this->raw_matrix_;
+	*(tmp_vec[0].rbegin() + 1) = *(tmp_vec[0].rbegin())/(*(tmp_vec[0].rbegin() + 1));
+	it = tmp_vec.begin();
+	auto vars = _variables;
+	std::for_each(tmp_vec.begin() + 1, tmp_vec.end(), 
+		[&vars, &it](auto& i){
+			auto it2 = it->begin();
+			std::transform(i.begin(), i.end() - 1, i.begin(), 
+				[&it2](auto& i2)->T{
+					if(*it2 != T(NULL)) {
+						i2 *= *it2;
+					}
+					it2++;
+					return i2; 
+				}
+			);
+			it++;
+		}
+	);
+	std::string str_tmp = "x" + std::to_string(cols_);
+	_variables.insert(std::pair<std::string, T>(str_tmp, T(*(tmp_vec[0].rbegin() + 1))));
+	defineVariables(tmp_vec);
+}
+
+template <typename T>
+void Matrix<T>::defineVariables(std::vector<std::vector<T>>& arg_vec)
+{
+	auto ptr_vars = &_variables;
+	std::for_each(arg_vec.begin() + 1, arg_vec.end(), 
+		[&ptr_vars](std::vector<T> i) {
+			auto front_not_zero_num = std::find_if(i.begin(), i.end(), 
+							Not_Zero
+						);
+			int pos = int(front_not_zero_num - i.begin());
+			auto tmp_num = std::accumulate(front_not_zero_num + 1, 
+						i.end() - 1, T(NULL)
+					);
+			tmp_num = (i.back()-tmp_num)/(*front_not_zero_num);
+			std::string str = "x" + std::to_string(pos + 1);
+			ptr_vars->insert(std::pair<std::string, T>(str, tmp_num));
+		}
+	);
 }
 
 // Gaus helper functions start
 template <typename T>
 void Matrix<T>::gausHelper(std::vector<std::vector<T>>& arg_vec)
 {	
-	auto it = arg_vec.begin() + 1;
-	std::for_each(arg_vec.begin(), arg_vec.end(), 
+	auto it = arg_vec.begin();
+	std::for_each(arg_vec.begin(), arg_vec.end() - 1, 
 		[&arg_vec, &it](auto& i){
+			it++;
 			auto No_zero_num1 = std::find_if(i.begin(), i.end(), 
 					Not_Zero
 			);
@@ -210,62 +258,28 @@ void Matrix<T>::gausHelper(std::vector<std::vector<T>>& arg_vec)
 			int pos2 = int(No_zero_num2 - it->begin());
 			if(pos1 != int(i.size())){ 
 				if(pos1 == pos2) {
-					std::vector<int> tmp_v = *it;
-					T mult = find_LCM(i[pos1], tmp_v[pos1]);
+					std::vector<T> tmp_v = *it;
+					T mult = find_LCM(abs(i[pos1]), abs(tmp_v[pos1]));
 					T mult_i = mult/i[pos1];
 					T mult_it = mult/tmp_v[pos1];
 					std::transform(i.begin(), i.end(), i.begin(),
 						std::bind1st(std::multiplies<T>(), mult_i));
 					std::transform(it->begin(), it->end(), tmp_v.begin(),
 						std::bind1st(std::multiplies<T>(), mult_it));
-					/*
-					std::cout  <<  std::endl;
-					std::cout  <<  std::endl;
-					std::cout  <<  std::endl;
-					for(auto val: i){
-						std::cout  <<  val  << "  ";
-					}
-					std::cout  <<  std::endl;
-					for(auto val: tmp_v){
-						std::cout  <<  val  << "  ";
-					}
-					std::cout  <<  std::endl;
-					*/
 					if(mult_i*i[pos1] == -(mult_it*tmp_v[pos1])) {
 						std::transform(i.begin(), i.end(), tmp_v.begin(), i.begin(), std::plus<T>());
 					} else {
 						std::transform(i.begin(), i.end(), tmp_v.begin(), i.begin(), std::minus<T>());
 					}
-					/*
-					for(auto val: i){
-						std::cout  <<  val  << "  ";
-					}
-					std::cout  <<  std::endl;
-					std::cout  <<  std::endl;
-					std::cout  <<  std::endl;
-					for(auto val: i){
-						std::cout  <<  val  << "  ";
-					}
-					std::cout  <<  std::endl;
-					*/
-
 				}
 			}
-			it++;
 		}
 	);
-
-	//gausHelper(std::vector<std::vector<T>>& arg_vec)
-
-	for(auto i: arg_vec){
-		for(auto val: i){
-			std::cout  <<  val  << "  ";
-		}
-		std::cout  <<  std::endl;
+	if(*((arg_vec.begin())->end() - 3) != 0) {
+		gausHelper(arg_vec);
+	} else {
+		return;
 	}
-	/*
-	}*/
-
 }
 
 template <typename T>
@@ -279,7 +293,7 @@ T Matrix<T>::find_GCD(T arg_num_1, T arg_num_2)
 }
 
 template <typename T>
-T Matrix<T>::find_LCM(T& arg_num_1, T& arg_num_2)
+T Matrix<T>::find_LCM(const T& arg_num_1, const T& arg_num_2)
 {
 	T gcd = find_GCD(arg_num_1, arg_num_2);
 	return (arg_num_1*arg_num_2)/gcd; 
@@ -303,6 +317,14 @@ void Matrix<T>::print_matrix()
 		std::cout << std::endl;
 		}
 	);
+}
+
+template <typename T>
+void Matrix<T>::print_vars()
+{
+	for(auto i: _variables) {
+		std::cout  <<  i.first << "  " << i.second << std::endl;
+	}
 }
 
 #endif // __MATRIX_DEFINITION_HPP__

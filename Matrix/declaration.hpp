@@ -10,6 +10,7 @@ template <typename T>
 class Matrix
 {
 private:
+	std::map<std::string, T> _variables;
 	int rows_,  cols_;
 	std::vector<std::vector<T>> raw_matrix_;
 	void allocSpace();
@@ -28,11 +29,13 @@ public:
         //Matrix gaussianEliminate();
         void gaussianEliminate();
 	void gausHelper(std::vector<std::vector<T>>&);
+	void defineVariables(std::vector<std::vector<T>>&);
 	static T find_GCD(T, T);
-	static T find_LCM(T&, T&);
+	static T find_LCM(const T&, const T&);
 	static bool Not_Zero(T&);
 
 	void print_matrix();
+	void print_vars();
 
 	Matrix transpose();
 	std::vector<T> operator+(std::vector<T>&);
