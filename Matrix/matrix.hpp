@@ -157,7 +157,6 @@ void Matrix<T>::gaussianEliminate()
 	std::multimap<int, std::vector<T>> tmp_mltmap;
 	int row_size = int(this->cols_ - 1);
 	std::for_each(this->raw_matrix_.begin(), this->raw_matrix_.end(), 
-<<<<<<< HEAD
 		[&row_size, &tmp_mltmap](std::vector<T> i) {
 			auto front_zero_num = std::find_if(i.begin(), i.end(), 
 				Not_Zero
@@ -167,18 +166,17 @@ void Matrix<T>::gaussianEliminate()
 				pos = -1;
 			}
 			tmp_mltmap.insert(std::pair<int, std::vector<T>>(pos, i));
-=======
-		      [&row_size, &tmp_mltmap](std::vector<T> i) {
-		auto zero_num = std::find_if(i.begin(), i.end(), Not_Zero);
-		auto tmp = int(zero_num - i.begin());
-		if (tmp == row_size) {
-			tmp = -1;
->>>>>>> eb93928bebd5b3ed595edd7f76ffd34c55bee23d
+		      //[&row_size, &tmp_mltmap](std::vector<T> i) {
+		//auto zero_num = std::find_if(i.begin(), i.end(), Not_Zero);
+		//auto tmp = int(zero_num - i.begin());
+		//if (tmp == row_size) {
+		//	tmp = -1;
+		//}
+		//tmp_mltmap.insert(std::pair<int, std::vector<int>>(tmp, i));
+		
 		}
-		tmp_mltmap.insert(std::pair<int, std::vector<int>>(tmp, i));
-	});
+	);
 	auto it = this->raw_matrix_.begin();
-<<<<<<< HEAD
 	std::for_each(tmp_mltmap.begin(), tmp_mltmap.end(), 
 			[&it](auto i) {
 				*it++ = i.second;
@@ -231,19 +229,10 @@ void Matrix<T>::defineVariables(std::vector<std::vector<T>>& arg_vec)
 	);
 }
 
-=======
-	std::for_each(tmp_mltmap.begin(), tmp_mltmap.end(), [&it](auto i) {
-		*it++ == i.second;
-	});
-	//i.reverse();
-}
-
->>>>>>> eb93928bebd5b3ed595edd7f76ffd34c55bee23d
 // Gaus helper functions start
 template <typename T>
 void Matrix<T>::gausHelper(std::vector<std::vector<T>>& arg_vec)
 {	
-<<<<<<< HEAD
 	auto it = arg_vec.begin();
 	std::for_each(arg_vec.begin(), arg_vec.end() - 1, 
 		[&arg_vec, &it](auto& i){
@@ -280,20 +269,6 @@ void Matrix<T>::gausHelper(std::vector<std::vector<T>>& arg_vec)
 	} else {
 		return;
 	}
-=======
-	auto it = arg_vec.begin() + 1;
-	std::for_each(arg_vec.begin(), arg_vec.end(), [&arg_vec, &it](auto i) {
-	        auto No_zero_num1 = std::find_if(i.begin(), i.end(), Not_Zero);
-		auto No_zero_num2 = std::find_if(it->begin(), it->end(), Not_Zero);
-		if(No_zero_num1 != *i - arg_vec.begin) { 
-			if(No_zero_num1 == No_zero_num2) {
-				auto mult = find_LCM(i[No_zero_num1], *(it + No_zero_num2));
-				i *= mult/i[No_zero_num1];
-				*it += mult/(*(it + No_zero_num2));
-			}
-		}
-	});
->>>>>>> eb93928bebd5b3ed595edd7f76ffd34c55bee23d
 }
 
 template <typename T>
@@ -301,17 +276,14 @@ T Matrix<T>::find_GCD(T arg_num_1, T arg_num_2)
 {
 	if (arg_num_1 == arg_num_2) {
 		return arg_num_1;
-<<<<<<< HEAD
 	if (arg_num_1 > arg_num_2)
 		return find_GCD(arg_num_1-arg_num_2,arg_num_2);
 	return find_GCD(arg_num_1, arg_num_2-arg_num_1);
-=======
 	}
 	if (arg_num_1 > arg_num_2) {
-		return gcd(arg_num_1-arg_num_2,arg_num_2);
+		return find_GCD(arg_num_1-arg_num_2,arg_num_2);
 	}
-	return gcd(arg_num_1, arg_num_2-arg_num_1);
->>>>>>> eb93928bebd5b3ed595edd7f76ffd34c55bee23d
+	return find_GCD(arg_num_1, arg_num_2-arg_num_1);
 }
 
 template <typename T>
@@ -321,7 +293,6 @@ T Matrix<T>::find_LCM(const T& arg_num_1, const T& arg_num_2)
 	return (arg_num_1*arg_num_2)/gcd; 
 }
 
-<<<<<<< HEAD
 template <typename T>
 bool Matrix<T>::Not_Zero(T& arg)
 {
@@ -330,8 +301,6 @@ bool Matrix<T>::Not_Zero(T& arg)
 
 // Gaus helper functions end
 
-=======
->>>>>>> eb93928bebd5b3ed595edd7f76ffd34c55bee23d
 template <typename T>
 void Matrix<T>::print_matrix()
 {
