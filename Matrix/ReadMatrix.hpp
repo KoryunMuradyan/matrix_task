@@ -34,8 +34,8 @@ std::vector<std::vector<T>> MatrixRead()
 {
 	std::ifstream file_to_read("file.txt");
 	const std::string str_file((
-				std::istreambuf_iterator<char>(file_to_read)),
-				std::istreambuf_iterator<char>());
+			std::istreambuf_iterator<char>(file_to_read)),
+			std::istreambuf_iterator<char>());
 	std::vector<std::string> num_string_vec = str_seq_to_int_vec(str_file);
 	std::vector<std::vector<T>> vec_2d_int;
 	std::for_each (num_string_vec.begin(), num_string_vec.end(), 
