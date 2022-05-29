@@ -8,13 +8,13 @@
 
 using  namespace math;
 
+
 template <typename T>
 Matrix<T>::Matrix()
 	: rows_(1)
 	, cols_(1)
 {
-	std::vector<std::vector<T>> vec(rows_, std::vector<T>(cols_,
-					T(NULL)));
+	matrix_type<T> vec(rows_, vec_type<T>(cols_, int(NULL)));
 }
 
 template <typename T>
@@ -22,8 +22,8 @@ Matrix<T>::Matrix(int& arg_rows, int& arg_cols)
 	: rows_(arg_rows)
 	, cols_(arg_cols)
 {
-	std::vector<std::vector<T>> raw_matrix_(rows_, 
-					std::vector<T>(cols_, T(NULL)));
+	matrix_type<T> raw_matrix_(rows_, 
+					vec_type<T>(cols_, T(NULL)));
 }
 
 template <typename T>
@@ -31,12 +31,12 @@ Matrix<T>::Matrix(int& arg_rows, int& arg_cols, T& arg_val)
 	: rows_(arg_rows)
 	, cols_(arg_cols)
 {
-	std::vector<std::vector<T>> raw_matrix_(rows_,
-                                    std::vector<T>(cols_, arg_val));
+	matrix_type<T> raw_matrix_(rows_,
+                                    vec_type<T>(cols_, arg_val));
 }
 
 template <typename T>
-Matrix<T>::Matrix(std::vector<std::vector<T>>& arg_vec) 
+Matrix<T>::Matrix(matrix_type<T>& arg_vec) 
 	: raw_matrix_(arg_vec)
 {
 	this->cols_ = int(arg_vec[1].size());
@@ -79,7 +79,7 @@ Matrix<T> Matrix<T>::transpose()
 template <typename T>
 void Matrix<T>::swapRows(int& r1, int& r2)
 {
-	std::vector<T> temp = raw_matrix_[r1];
+	vec_type<T> temp = raw_matrix_[r1];
 	raw_matrix_[r1] = raw_matrix_[r2];
 	raw_matrix_[r2] = temp;
 }
@@ -88,10 +88,10 @@ template <typename T>
 Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& m)
 {
 	auto it_this = this->begin();
-	std::for_each(m.begin(), m.end(),[&it_this](auto &i_m) {
-		std::transform(it_this->begin(), it_this->end(), 
+	for_each(m.begin(), m.end(),[&it_this](auto &i_m) {
+		transform(it_this->begin(), it_this->end(), 
 			       i_m.begin(), it_this->begin(), 
-			       std::plus<T>());
+			       plus<T>());
 		it_this++;
 	});
 	return *this;
@@ -101,9 +101,9 @@ template <typename T>
 Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& m)
 {
 	auto it_this = this->begin();
-	std::for_each(m.begin(), m.end(), [&it_this] (auto &i_m) {
-		std::transform(it_this->begin(), it_this->end(), i_m.begin(),
-			       it_this->begin(), std::minus<T>());
+	for_each(m.begin(), m.end(), [&it_this] (auto &i_m) {
+		transform(it_this->begin(), it_this->end(), i_m.begin(),
+			       it_this->begin(), minus<T>());
 		it_this++;
 	});
 	return *this;
@@ -113,10 +113,10 @@ template <typename T>
 Matrix<T>& Matrix<T>::operator*=(Matrix<T>& m)
 {
 	auto tmp_vec = m.transpose();
-	std::for_each(this->begin(), this->end(),
+	for_each(this->begin(), this->end(),
                       [&tmp_vec](auto& i_this_vec) { 
-		std::vector<T> tmp_v_to_push;
-		std::for_each(tmp_vec.begin(), tmp_vec.end(), 
+		vec_type<T> tmp_v_to_push;
+		for_each(tmp_vec.begin(), tmp_vec.end(), 
 			      [&i_this_vec, &tmp_v_to_push](auto& j_vec) {
 			T num_to_pushback = T(NULL);
 			boost::for_each(i_this_vec, j_vec, 
@@ -133,8 +133,8 @@ Matrix<T>& Matrix<T>::operator*=(Matrix<T>& m)
 template <typename T>
 Matrix<T>& Matrix<T>::operator*=(T& arg_mult_num)
 {
-       std::for_each(this->begin(), this->end, [&arg_mult_num] (auto& i_vec) {
-		std::transform(i_vec.begin(), i_vec.end(), i_vec.begin(), 
+       for_each(this->begin(), this->end, [&arg_mult_num] (auto& i_vec) {
+		transform(i_vec.begin(), i_vec.end(), i_vec.begin(), 
 			       [&arg_mult_num](T& num) -> T {
 			return num * arg_mult_num;}
 		);}
@@ -145,9 +145,9 @@ Matrix<T>& Matrix<T>::operator*=(T& arg_mult_num)
 template <typename T>
 Matrix<T>& Matrix<T>::operator/=(T& arg_mult_num)
 {
-	std::for_each(this->begin(), this->end, 
+	for_each(this->begin(), this->end, 
 	     	      [&arg_mult_num](auto& i_vec) {
-		std::transform(i_vec.begin(), i_vec.end(), i_vec.begin(), 
+		transform(i_vec.begin(), i_vec.end(), i_vec.begin(), 
 			       [&arg_mult_num](T& num) -> T {
 			return num / arg_mult_num; 
 		});
@@ -158,23 +158,23 @@ Matrix<T>& Matrix<T>::operator/=(T& arg_mult_num)
 template <typename T>
 void Matrix<T>::sort_rows_with_zero()
 {
-	std::multimap<int, std::vector<T>> tmp_mltmap;
+	multimap<int, vec_type<T>> tmp_mltmap;
 	int row_size = int(this->cols_ - 1);
-	std::for_each(this->raw_matrix_.begin(), this->raw_matrix_.end(), 
-			[&row_size, &tmp_mltmap](std::vector<T> i) {
-			auto front_zero_num = std::find_if(i.begin(), i.end(), 
+	for_each(this->raw_matrix_.begin(), this->raw_matrix_.end(), 
+			[&row_size, &tmp_mltmap](vec_type<T> i) {
+			auto front_zero_num = find_if(i.begin(), i.end(), 
 					Not_Zero
 					);
 			int pos = int(front_zero_num - i.begin());
 			if (pos == row_size) {
 			pos = -1;
 			}
-			tmp_mltmap.insert(std::pair<int, std::vector<T>>(pos, i));
+			tmp_mltmap.insert(pair<int, vec_type<T>>(pos, i));
 
 			}
 		     );
 	auto it = this->raw_matrix_.begin();
-	std::for_each(tmp_mltmap.begin(), tmp_mltmap.end(), 
+	for_each(tmp_mltmap.begin(), tmp_mltmap.end(), 
 			[&it](auto i) {
 			*it++ = i.second;
 			}
@@ -182,17 +182,17 @@ void Matrix<T>::sort_rows_with_zero()
 }
 
 template <typename T>
-std::vector<std::vector<T>> Matrix<T>::find_unknown_vars_by_known()
+matrix_type<T> Matrix<T>::find_unknown_vars_by_known()
 {
 	auto tmp_vec = this->raw_matrix_;
 	*(tmp_vec[0].rbegin() + 1) = *(tmp_vec[0].rbegin()) / 
 				    (*(tmp_vec[0].rbegin() + 1));
 	auto it = tmp_vec.begin();
 	auto vars = _variables;
-	std::for_each(tmp_vec.begin() + 1, tmp_vec.end(), 
+	for_each(tmp_vec.begin() + 1, tmp_vec.end(), 
 		      [&vars, &it](auto& i) {
 		auto it2 = it->begin();
-		std::transform(i.begin(), i.end() - 1, i.begin(), 
+		transform(i.begin(), i.end() - 1, i.begin(), 
 			       [&it2](auto& i2)->T {
 			if (*it2 != T(NULL)) {
 				i2 *= *it2;
@@ -202,26 +202,26 @@ std::vector<std::vector<T>> Matrix<T>::find_unknown_vars_by_known()
 		} );
 		it++;
 	} );
-	std::string str_tmp = "x" + std::to_string(cols_);
-	_variables.insert(std::pair<std::string, T>(str_tmp,
+	string str_tmp = "x" + std::to_string(cols_);
+	_variables.insert(pair<std::string, T>(str_tmp,
 			  T(*(tmp_vec[0].rbegin() + 1))));
 	return tmp_vec;
 }
 
 template <typename T>
-void Matrix<T>::defineVariables(std::vector<std::vector<T>>& arg_vec)
+void Matrix<T>::defineVariables(matrix_type<T>& arg_vec)
 {
 	auto ptr_vars = &_variables;
-	std::for_each(arg_vec.begin() + 1, arg_vec.end(), 
-		      [&ptr_vars](std::vector<T> i) {
-		auto front_not_zero_num = std::find_if(i.begin(), i.end(), 
+	for_each(arg_vec.begin() + 1, arg_vec.end(), 
+		      [&ptr_vars](vec_type<T> i) {
+		auto front_not_zero_num = find_if(i.begin(), i.end(), 
 						       Not_Zero);
 		int pos = int(front_not_zero_num - i.begin());
-		auto tmp_num = std::accumulate(front_not_zero_num + 1, 
+		auto tmp_num = accumulate(front_not_zero_num + 1, 
 					       i.end() - 1, T(NULL));
 		tmp_num = (i.back()-tmp_num)/(*front_not_zero_num);
-		std::string str = "x" + std::to_string(pos + 1);
-		ptr_vars->insert(std::pair<std::string, T>(str, tmp_num));
+		string str = "x" + std::to_string(pos + 1);
+		ptr_vars->insert(pair<std::string, T>(str, tmp_num));
 	} );
 }
 
@@ -229,56 +229,50 @@ template <typename T>
 void Matrix<T>::gaussianEliminate()
 {	
 	sort_rows_with_zero();
-	std::reverse(raw_matrix_.begin(), raw_matrix_.end());
-	this->gausHelper(this->raw_matrix_);	
+	reverse(raw_matrix_.begin(), raw_matrix_.end());
+	gausHelper(raw_matrix_);	
 	auto tmp_vec = find_unknown_vars_by_known();
 	defineVariables(tmp_vec);
 }
 
 
 template <typename T>
-void Matrix<T>::modifie_by_gaus(int pos1, int pos2, std::vector<T>& tmp_v,
-	std::vector<T>& i, std::vector<std::vector<T>>& arg_vec)
-{
-	auto it = arg_vec.begin();
-	if (pos1 == pos2) {
-		T mult = find_LCM(abs(i[pos1]), abs(tmp_v[pos1]));
-		T mult_i = mult / i[pos1];
-		T mult_it = mult/tmp_v[pos1];
-		std::transform(i.begin(), i.end(), i.begin(),
-				std::bind1st(std::multiplies<T>(), mult_i));
-		std::transform(it->begin(), it->end(), tmp_v.begin(),
-				std::bind1st(std::multiplies<T>(), mult_it));
-		if (mult_i*i[pos1] == -(mult_it*tmp_v[pos1])) {
-			std::transform(i.begin(), i.end(), tmp_v.begin(), 
-					i.begin(),
-					std::plus<T>());
-		} else {
-			std::transform(i.begin(), i.end(), tmp_v.begin(),
-					i.begin(), 
-					std::minus<T>());
-		}
-	}	
-}
-
-template <typename T>
-void Matrix<T>::gausHelper(std::vector<std::vector<T>>& arg_vec)
+void Matrix<T>::gausHelper(matrix_type<T>& arg_vec)
 {	
 	auto it = arg_vec.begin();
-	std::for_each(arg_vec.begin(), arg_vec.end() - 1, 
-		      [&arg_vec, &it, this](auto& i) {
+	for_each(arg_vec.begin(), arg_vec.end() - 1, [&](auto& i) {
 		it++;
-		auto No_zero_num1 = std::find_if(i.begin(), i.end(), Not_Zero);
-		auto No_zero_num2 = std::find_if(it->begin(), it->end(), 
-					         Not_Zero);
+		auto No_zero_num1 = find_if(i.begin(), i.end(), Not_Zero);
+		auto No_zero_num2 = find_if(it->begin(), it->end(), Not_Zero);
 		int pos1 = int(No_zero_num1 - i.begin());
 		int pos2 = int(No_zero_num2 - it->begin());
-		std::vector<T> tmp_v = *it;
+		vec_type<T> tmp_v = *it;
 		if (pos1 != int(i.size())) { 
-			Matrix<T>::modifie_by_gaus(pos1, pos2, tmp_v, i, arg_vec);
+			if (pos1 == pos2) {
+				T mult = find_LCM(abs(i[pos1]),
+						  abs(tmp_v[pos1]));
+				T mult_i = mult / i[pos1];
+				T mult_it = mult/tmp_v[pos1];
+				transform(i.begin(), i.end(), i.begin(),
+					  bind1st(std::multiplies<T>(),
+						   mult_i));
+				transform(it->begin(), it->end(),
+					  tmp_v.begin(),
+				bind1st(std::multiplies<T>(), mult_it));
+				if (mult_i*i[pos1] == -(mult_it*tmp_v[pos1])) {
+					transform(i.begin(), i.end(),
+						  tmp_v.begin(), 
+						  i.begin(),
+					plus<T>());
+				} else {
+					transform(i.begin(), i.end(),
+						  tmp_v.begin(), i.begin(), 
+						  minus<T>());
+				}
+			}	
 		}
 
-	} );
+		} );
 	if (*((arg_vec.begin())->end() - 3) != 0) {
 		gausHelper(arg_vec);
 	} else {
@@ -319,11 +313,11 @@ bool Matrix<T>::Not_Zero(T& arg)
 template <typename T>
 void Matrix<T>::print_matrix()
 {
-	std::for_each(this->raw_matrix_.begin(), this->raw_matrix_.end(), 
-			      [](auto& i){ std::for_each(i.begin(), i.end(), 
-			      [](auto& j){ std::cout << j << " ";}
+	for_each(this->raw_matrix_.begin(), this->raw_matrix_.end(), 
+			      [](auto& i){ for_each(i.begin(), i.end(), 
+			      [](auto& j){ cout << j << " ";}
 		);
-		std::cout << std::endl;
+		cout << std::endl;
 	});
 }
 
@@ -331,7 +325,7 @@ template <typename T>
 void Matrix<T>::print_vars()
 {
 	for(auto i: _variables) {
-		std::cout  <<  i.first << "  " << i.second << std::endl;
+		cout  <<  i.first << "  " << i.second << std::endl;
 	}
 }
 

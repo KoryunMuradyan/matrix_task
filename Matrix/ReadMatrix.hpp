@@ -8,6 +8,9 @@
 #include <vector>
 #include <iostream>
 
+
+using namespace std;
+
 template <typename T>
 void NumLinetoIntVec(std::vector<std::vector<T>>& arg_vec, 
 		     std::string& arg_str) 
