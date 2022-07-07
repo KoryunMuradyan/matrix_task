@@ -4,6 +4,7 @@
 #include <numeric>
 #include <map>
 #include <cstdlib>
+#include <iterator>
 #include "declaration.hpp"
 
 using  namespace math;
@@ -182,47 +183,43 @@ void Matrix<T>::sort_rows_with_zero()
 }
 
 template <typename T>
-matrix_type<T> Matrix<T>::find_unknown_vars_by_known()
+void Matrix<T>::define_each_X(std::vector<T>& row, int&& pos)
 {
-	auto tmp_vec = this->raw_matrix_;
-	*(tmp_vec[0].rbegin() + 1) = *(tmp_vec[0].rbegin()) / 
-				    (*(tmp_vec[0].rbegin() + 1));
-	auto it = tmp_vec.begin();
-	auto vars = _variables;
-	for_each(tmp_vec.begin() + 1, tmp_vec.end(), 
-		      [&vars, &it](auto& i) {
-		auto it2 = it->begin();
-		transform(i.begin(), i.end() - 1, i.begin(), 
-			       [&it2](auto& i2)->T {
-			if (*it2 != T(NULL)) {
-				i2 *= *it2;
-			}
-			it2++;
-			return i2; 
-		} );
-		it++;
-	} );
-	string str_tmp = "x" + std::to_string(cols_);
-	_variables.insert(pair<std::string, T>(str_tmp,
-			  T(*(tmp_vec[0].rbegin() + 1))));
-	return tmp_vec;
+	string str = "x" + std::to_string(pos + 1);
+	auto ptr_vars = &_variables;
+	auto tmp_num = accumulate(row.begin() + pos + 1, row.end() - 1, T(NULL));
+	row[pos] = (row.back()-tmp_num)/(row[pos]);
+	ptr_vars->insert(pair<std::string, T>(str, row[pos]));
 }
 
 template <typename T>
-void Matrix<T>::defineVariables(matrix_type<T>& arg_vec)
+void Matrix<T>::put_known_vars(typename std::vector<std::vector<T>>::iterator& begin, 
+		typename matrix_type<T>::iterator& end, int& pos, T& var)
 {
+	auto a = begin;
+	for_each(begin, end, [&](auto& row) {
+				row[pos] *= var;
+			}
+		);
+}
+
+template <typename T>
+void Matrix<T>::defineVariables()
+{
+	auto arg_vec = raw_matrix_;
+	*(arg_vec[0].end() - 2) = arg_vec[0].back()/(*(arg_vec[0].end() - 2));
+	_variables.insert(pair<std::string, T>("x0", *(arg_vec[0].end() - 2)));
 	auto ptr_vars = &_variables;
-	for_each(arg_vec.begin() + 1, arg_vec.end(), 
-		      [&ptr_vars](vec_type<T> i) {
-		auto front_not_zero_num = find_if(i.begin(), i.end(), 
-						       Not_Zero);
-		int pos = int(front_not_zero_num - i.begin());
-		auto tmp_num = accumulate(front_not_zero_num + 1, 
-					       i.end() - 1, T(NULL));
-		tmp_num = (i.back()-tmp_num)/(*front_not_zero_num);
-		string str = "x" + std::to_string(pos + 1);
-		ptr_vars->insert(pair<std::string, T>(str, tmp_num));
-	} );
+	auto it_begin = arg_vec.begin() + 1;
+	auto it_end = arg_vec.end();
+	for_each(arg_vec.begin(), arg_vec.end() - 1, [&](auto& row) {
+				auto front_not_zero_num = find_if(row.begin(), row.end(), Not_Zero);
+				int pos = int(front_not_zero_num - row.begin());
+				put_known_vars(it_begin, it_end, pos, row[pos]);
+				define_each_X(*it_begin, std::move(pos - 1));
+				it_begin++;
+			}
+	);
 }
 
 template <typename T>
@@ -231,8 +228,7 @@ void Matrix<T>::gaussianEliminate()
 	sort_rows_with_zero();
 	reverse(raw_matrix_.begin(), raw_matrix_.end());
 	gausHelper(raw_matrix_);	
-	auto tmp_vec = find_unknown_vars_by_known();
-	defineVariables(tmp_vec);
+	defineVariables();
 }
 
 
