@@ -45,12 +45,6 @@ std::vector<std::vector<T>> MatrixRead()
 		       [&vec_2d_int](std::string str_to_pass) {
 		NumLinetoIntVec(vec_2d_int, str_to_pass);}
 	);
-	std::for_each(vec_2d_int.begin(), vec_2d_int.end(), 
-		      [](std::vector<T> v) { 
-		std::copy(v.begin(), v.end(), 
-		std::ostream_iterator<T>(std::cout, " "));
-		std::cout << std::endl;
-	});
 	return vec_2d_int;
 }
 
